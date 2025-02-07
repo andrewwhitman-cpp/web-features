@@ -449,27 +449,6 @@ pixelArea.addEventListener('mousemove', (e) => {
                 mouseX = e.clientX - rect.left;
                 mouseY = e.clientY - rect.top;
             });
-
-            // Click Animation
-            particleArea.addEventListener('click', (e) => {
-                const rect = particleArea.getBoundingClientRect();
-                const x = e.clientX - rect.left;
-                const y = e.clientY - rect.top;
-
-                for (let i = 0; i < 20; i++) {
-                    const particle = createParticle(x, y, '#4ecdc4');
-                    particleArea.appendChild(particle);
-
-                    gsap.to(particle, {
-                        x: (Math.random() - 0.5) * 200,
-                        y: (Math.random() - 0.5) * 200,
-                        opacity: 0,
-                        duration: 1,
-                        ease: 'power2.out',
-                        onComplete: () => particle.remove()
-                    });
-                }
-            });
         }
         // 1. Cursor Trail
         const cursorTrailArea = document.querySelector('#cursor-trail .animation-area');
