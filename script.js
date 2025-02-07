@@ -1,4 +1,243 @@
 document.addEventListener('DOMContentLoaded', () => {
+    function downloadAnimationCode(animationType) {
+        const codeSnippets = {
+            'cursor-trail': {
+                js: `cursorTrailArea.addEventListener('mousemove', (e) => {
+    const rect = cursorTrailArea.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    const particle = createParticle(x, y, '#4ecdc4');
+    cursorTrailArea.appendChild(particle);
+    trail.push(particle);
+    gsap.to(particle, {
+        opacity: 0,
+        duration: 1,
+        onComplete: () => {
+            particle.remove();
+            trail.shift();
+        }
+    });
+});`,
+                css: `.animation-area {
+    width: 100%;
+    height: 200px;
+    background: #333;
+    border-radius: 8px;
+    position: relative;
+    overflow: hidden;
+}`
+            },
+            'glowing-cursor': {
+                js: `const glow = document.createElement('div');
+glow.style.position = 'absolute';
+glow.style.width = '40px';
+glow.style.height = '40px';
+glow.style.background = 'radial-gradient(circle, #4ecdc4, transparent)';
+glow.style.borderRadius = '50%';
+glow.style.filter = 'blur(5px)';
+glow.style.margin = '-20px 0 0 -20px';
+glowArea.appendChild(glow);
+
+glowArea.addEventListener('mousemove', (e) => {
+    const rect = glowArea.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    glow.style.left = x + 'px';
+    glow.style.top = y + 'px';
+});`,
+                css: `.animation-area {
+    width: 100%;
+    height: 200px;
+    background: #333;
+    border-radius: 8px;
+    position: relative;
+    overflow: hidden;
+}`
+            },
+            'bubble-pop': {
+                js: `bubbleArea.addEventListener('mousemove', (e) => {
+    if (Math.random() > 0.9) {
+        const rect = bubbleArea.getBoundingClientRect();
+        const bubble = createParticle(
+            e.clientX - rect.left,
+            e.clientY - rect.top,
+            '#4ecdc4'
+        );
+        bubbleArea.appendChild(bubble);
+        
+        gsap.to(bubble, {
+            y: '-=100',
+            scale: 0,
+            opacity: 0,
+            duration: 1,
+            ease: 'power2.out',
+            onComplete: () => bubble.remove()
+        });
+    }
+});`,
+                css: `.animation-area {
+    width: 100%;
+    height: 200px;
+    background: #333;
+    border-radius: 8px;
+    position: relative;
+    overflow: hidden;
+}`
+            },
+            'laser-beam': {
+                js: `laserArea.addEventListener('mousemove', (e) => {
+    if (Math.random() > 0.9) {
+        const rect = laserArea.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        const colors = ['#00ffff', '#ff00ff', '#00ff99', '#ff3377'];
+        
+        const laser = document.createElement('div');
+        laser.style.position = 'absolute';
+        laser.style.width = '40px';
+        laser.style.height = '2px';
+        laser.style.background = colors[Math.floor(Math.random() * colors.length)];
+        laser.style.boxShadow = '0 0 8px ' + laser.style.background;
+        laser.style.left = x + 'px';
+        laser.style.top = y + 'px';
+        laser.style.transformOrigin = '0 50%';
+        
+        const angle = Math.random() * Math.PI * 2;
+        laser.style.transform = 'rotate(' + angle + 'rad)';
+        laserArea.appendChild(laser);
+        
+        gsap.to(laser, {
+            opacity: 0,
+            duration: 0.5,
+            onComplete: () => laser.remove()
+        });
+    }
+});`,
+                css: `.animation-area {
+    width: 100%;
+    height: 200px;
+    background: #333;
+    border-radius: 8px;
+    position: relative;
+    overflow: hidden;
+}`
+            },
+            'pixel-distortion': {
+                js: `const pixels = [];
+const pixelSize = 8;
+
+for (let x = 0; x < pixelArea.offsetWidth; x += pixelSize) {
+    for (let y = 0; y < pixelArea.offsetHeight; y += pixelSize) {
+        const pixel = document.createElement('div');
+        pixel.style.position = 'absolute';
+        pixel.style.width = pixelSize + 'px';
+        pixel.style.height = pixelSize + 'px';
+        pixel.style.backgroundColor = '#4ecdc4';
+        pixel.style.left = x + 'px';
+        pixel.style.top = y + 'px';
+        pixel.style.opacity = '0.1';
+        pixelArea.appendChild(pixel);
+        pixels.push(pixel);
+    }
+}
+
+pixelArea.addEventListener('mousemove', (e) => {
+    const rect = pixelArea.getBoundingClientRect();
+    const mouseX = e.clientX - rect.left;
+    const mouseY = e.clientY - rect.top;
+    
+    pixels.forEach(pixel => {
+        const x = parseFloat(pixel.style.left);
+        const y = parseFloat(pixel.style.top);
+        const distance = Math.hypot(mouseX - x, mouseY - y);
+        const maxDistance = 50;
+        
+        if (distance < maxDistance) {
+            gsap.to(pixel, {
+                opacity: 1 - (distance / maxDistance),
+                scale: 1 + (1 - distance / maxDistance),
+                duration: 0.3
+            });
+        } else {
+            gsap.to(pixel, {
+                opacity: 0.1,
+                scale: 1,
+                duration: 0.3
+            });
+        }
+    });
+});`,
+                css: `.animation-area {
+    width: 100%;
+    height: 200px;
+    background: #333;
+    border-radius: 8px;
+    position: relative;
+    overflow: hidden;
+}`
+            },
+            'fireworks': {
+                js: `fireworksArea.addEventListener('mousemove', (e) => {
+    const rect = fireworksArea.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+
+    const line = document.createElement('div');
+    line.style.position = 'absolute';
+    line.style.width = '2px';
+    line.style.height = '2px';
+    line.style.background = '#4ecdc4';
+    line.style.boxShadow = '0 0 8px #4ecdc4';
+    line.style.left = x + 'px';
+    line.style.top = y + 'px';
+    fireworksArea.appendChild(line);
+
+    gsap.to(line, {
+        opacity: 0,
+        duration: 0.4,
+        ease: 'power2.in',
+        onComplete: () => line.remove()
+    });
+});`,
+                css: `.animation-area {
+    width: 100%;
+    height: 200px;
+    background: #333;
+    border-radius: 8px;
+    position: relative;
+    overflow: hidden;
+}`
+            }
+        };
+
+        const snippet = codeSnippets[animationType];
+        if (!snippet) return;
+
+        const content = `/* JavaScript */\n${snippet.js}\n\n/* CSS */\n${snippet.css}`;
+        const blob = new Blob([content], { type: 'text/plain' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `${animationType}-animation.txt`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+    }
+
+    // Add download buttons to each animation box
+    document.querySelectorAll('.animation-box').forEach(box => {
+        const downloadBtn = document.createElement('button');
+        downloadBtn.className = 'download-btn';
+        const icon = document.createElement('i');
+        icon.className = 'fas fa-download';
+        downloadBtn.appendChild(icon);
+        downloadBtn.addEventListener('click', (e) => {
+            e.stopPropagation(); // Prevent triggering animation box click events
+            downloadAnimationCode(box.id);
+        });
+        box.appendChild(downloadBtn);
+    });
     // Check if GSAP is loaded
     if (typeof gsap === 'undefined') {
         console.error('GSAP is not loaded. Please check your script inclusion.');
