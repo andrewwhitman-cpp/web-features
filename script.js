@@ -90,7 +90,8 @@ particleArea.addEventListener('mousemove', (e) => {
 }`
             },
             'cursor-trail': {
-                js: `cursorTrailArea.addEventListener('mousemove', (e) => {
+                js: `let trail = [];
+cursorTrailArea.addEventListener('mousemove', (e) => {
     const rect = cursorTrailArea.getBoundingClientRect();
     const x = e.clientX - rect.left;
     const y = e.clientY - rect.top;
@@ -104,6 +105,26 @@ particleArea.addEventListener('mousemove', (e) => {
             particle.remove();
             trail.shift();
         }
+    });
+});`,
+                click_js: `cursorTrailArea.addEventListener('click', (e) => {
+    const rect = cursorTrailArea.getBoundingClientRect();
+    const ripple = document.createElement('div');
+    ripple.style.position = 'absolute';
+    ripple.style.border = '2px solid #4ecdc4';
+    ripple.style.borderRadius = '50%';
+    ripple.style.width = '10px';
+    ripple.style.height = '10px';
+    ripple.style.left = (e.clientX - rect.left - 5) + 'px';
+    ripple.style.top = (e.clientY - rect.top - 5) + 'px';
+    cursorTrailArea.appendChild(ripple);
+
+    gsap.to(ripple, {
+        scale: 15,
+        opacity: 0,
+        duration: 1,
+        ease: 'power2.out',
+        onComplete: () => ripple.remove()
     });
 });`,
                 css: `.animation-area {
@@ -301,7 +322,7 @@ pixelArea.addEventListener('mousemove', (e) => {
         const snippet = codeSnippets[animationType];
         if (!snippet) return;
 
-        const content = `/* JavaScript */\n${snippet.js}\n\n/* CSS */\n${snippet.css}`;
+        const content = `/* JavaScript */\n\n/* Hover Animation */\n${snippet.js}\n\n/* Click Animation */\n${snippet.click_js || '// No click animation implemented for this effect'}\n\n/* CSS */\n${snippet.css}`;
         const blob = new Blob([content], { type: 'text/plain' });
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
