@@ -154,6 +154,30 @@ glowArea.addEventListener('mousemove', (e) => {
     glow.style.left = x + 'px';
     glow.style.top = y + 'px';
 });`,
+                click_js: `glowArea.addEventListener('click', (e) => {
+    const rect = glowArea.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    
+    const burst = document.createElement('div');
+    burst.style.position = 'absolute';
+    burst.style.width = '60px';
+    burst.style.height = '60px';
+    burst.style.background = 'radial-gradient(circle, #4ecdc4 20%, transparent 70%)';
+    burst.style.borderRadius = '50%';
+    burst.style.filter = 'blur(5px)';
+    burst.style.left = (x - 30) + 'px';
+    burst.style.top = (y - 30) + 'px';
+    glowArea.appendChild(burst);
+
+    gsap.to(burst, {
+        scale: 3,
+        opacity: 0,
+        duration: 0.8,
+        ease: 'power2.out',
+        onComplete: () => burst.remove()
+    });
+});`,
                 css: `.animation-area {
     width: 100%;
     height: 200px;
@@ -161,7 +185,7 @@ glowArea.addEventListener('mousemove', (e) => {
     border-radius: 8px;
     position: relative;
     overflow: hidden;
-}`
+}`,
             },
             'bubble-pop': {
                 js: `bubbleArea.addEventListener('mousemove', (e) => {
@@ -184,6 +208,29 @@ glowArea.addEventListener('mousemove', (e) => {
         });
     }
 });`,
+                click_js: `bubbleArea.addEventListener('click', (e) => {
+    const rect = bubbleArea.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    
+    for (let i = 0; i < 8; i++) {
+        const bubble = createParticle(x, y, '#4ecdc4');
+        bubbleArea.appendChild(bubble);
+        
+        const angle = (i / 8) * Math.PI * 2;
+        const distance = 100;
+        
+        gsap.to(bubble, {
+            x: x + Math.cos(angle) * distance,
+            y: y + Math.sin(angle) * distance,
+            scale: 0,
+            opacity: 0,
+            duration: 1,
+            ease: 'power2.out',
+            onComplete: () => bubble.remove()
+        });
+    }
+});`,
                 css: `.animation-area {
     width: 100%;
     height: 200px;
@@ -191,7 +238,7 @@ glowArea.addEventListener('mousemove', (e) => {
     border-radius: 8px;
     position: relative;
     overflow: hidden;
-}`
+}`,
             },
             'laser-beam': {
                 js: `laserArea.addEventListener('mousemove', (e) => {
@@ -222,6 +269,36 @@ glowArea.addEventListener('mousemove', (e) => {
         });
     }
 });`,
+                click_js: `laserArea.addEventListener('click', (e) => {
+    const rect = laserArea.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    const colors = ['#00ffff', '#ff00ff', '#00ff99', '#ff3377'];
+    
+    for (let i = 0; i < 12; i++) {
+        const laser = document.createElement('div');
+        laser.style.position = 'absolute';
+        laser.style.width = '80px';
+        laser.style.height = '3px';
+        laser.style.background = colors[Math.floor(Math.random() * colors.length)];
+        laser.style.boxShadow = '0 0 12px ' + laser.style.background;
+        laser.style.left = x + 'px';
+        laser.style.top = y + 'px';
+        laser.style.transformOrigin = '0 50%';
+        
+        const angle = (i / 12) * Math.PI * 2;
+        laser.style.transform = 'rotate(' + angle + 'rad)';
+        laserArea.appendChild(laser);
+        
+        gsap.to(laser, {
+            scale: 2,
+            opacity: 0,
+            duration: 0.8,
+            ease: 'power2.out',
+            onComplete: () => laser.remove()
+        });
+    }
+});`,
                 css: `.animation-area {
     width: 100%;
     height: 200px;
@@ -229,7 +306,7 @@ glowArea.addEventListener('mousemove', (e) => {
     border-radius: 8px;
     position: relative;
     overflow: hidden;
-}`
+}`,
             },
             'pixel-distortion': {
                 js: `const pixels = [];
@@ -276,6 +353,36 @@ pixelArea.addEventListener('mousemove', (e) => {
         }
     });
 });`,
+                click_js: `pixelArea.addEventListener('click', (e) => {
+    const rect = pixelArea.getBoundingClientRect();
+    const clickX = e.clientX - rect.left;
+    const clickY = e.clientY - rect.top;
+    
+    pixels.forEach(pixel => {
+        const x = parseFloat(pixel.style.left);
+        const y = parseFloat(pixel.style.top);
+        const distance = Math.hypot(clickX - x, clickY - y);
+        const maxDistance = 100;
+        
+        if (distance < maxDistance) {
+            gsap.to(pixel, {
+                opacity: 1,
+                scale: 2,
+                rotation: Math.random() * 360,
+                duration: 0.5,
+                ease: 'power2.out',
+                onComplete: () => {
+                    gsap.to(pixel, {
+                        opacity: 0.1,
+                        scale: 1,
+                        rotation: 0,
+                        duration: 0.5
+                    });
+                }
+            });
+        }
+    });
+});`,
                 css: `.animation-area {
     width: 100%;
     height: 200px;
@@ -283,7 +390,7 @@ pixelArea.addEventListener('mousemove', (e) => {
     border-radius: 8px;
     position: relative;
     overflow: hidden;
-}`
+}`,
             },
             'fireworks': {
                 js: `fireworksArea.addEventListener('mousemove', (e) => {
@@ -308,6 +415,37 @@ pixelArea.addEventListener('mousemove', (e) => {
         onComplete: () => line.remove()
     });
 });`,
+                click_js: `fireworksArea.addEventListener('click', (e) => {
+    const rect = fireworksArea.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    const colors = ['#4ecdc4', '#ff6b6b', '#ffe66d', '#4a90e2'];
+
+    for (let i = 0; i < 20; i++) {
+        const spark = document.createElement('div');
+        spark.style.position = 'absolute';
+        spark.style.width = '3px';
+        spark.style.height = '3px';
+        spark.style.background = colors[Math.floor(Math.random() * colors.length)];
+        spark.style.boxShadow = '0 0 8px ' + spark.style.background;
+        spark.style.left = x + 'px';
+        spark.style.top = y + 'px';
+        fireworksArea.appendChild(spark);
+
+        const angle = Math.random() * Math.PI * 2;
+        const velocity = 3 + Math.random() * 3;
+        const distance = 100 + Math.random() * 100;
+
+        gsap.to(spark, {
+            x: x + Math.cos(angle) * distance,
+            y: y + Math.sin(angle) * distance,
+            opacity: 0,
+            duration: 0.8 + Math.random() * 0.4,
+            ease: 'power2.out',
+            onComplete: () => spark.remove()
+        });
+    }
+});`,
                 css: `.animation-area {
     width: 100%;
     height: 200px;
@@ -315,7 +453,7 @@ pixelArea.addEventListener('mousemove', (e) => {
     border-radius: 8px;
     position: relative;
     overflow: hidden;
-}`
+}`,
             }
         };
 
