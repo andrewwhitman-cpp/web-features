@@ -2,6 +2,14 @@ export function initFireworks(fireworksArea) {
     let lastX = 0;
     let lastY = 0;
 
+    const colors = [
+        'hsl(180, 100%, 70%)', // cyan
+        'hsl(300, 100%, 70%)', // magenta
+        'hsl(330, 100%, 70%)', // pink
+        'hsl(210, 100%, 70%)', // blue
+        'hsl(120, 100%, 70%)'  // green
+    ];
+
     fireworksArea.addEventListener('mousemove', (e) => {
         const rect = fireworksArea.getBoundingClientRect();
         const x = e.clientX - rect.left;
@@ -12,8 +20,9 @@ export function initFireworks(fireworksArea) {
             line.style.position = 'absolute';
             line.style.width = '2px';
             line.style.height = '2px';
-            line.style.background = '#4ecdc4';
-            line.style.boxShadow = '0 0 8px #4ecdc4';
+            const color = colors[Math.floor(Math.random() * colors.length)];
+            line.style.background = color;
+            line.style.boxShadow = `0 0 8px ${color}`;
             line.style.left = x + 'px';
             line.style.top = y + 'px';
             fireworksArea.appendChild(line);
@@ -59,7 +68,7 @@ export function initFireworks(fireworksArea) {
         function createMandalaLayer(radius, segments, rotationOffset = 0, layerIndex = 0, totalLayers = 1) {
             const angleStep = (Math.PI * 2) / segments;
             const color = colors[Math.floor(Math.random() * colors.length)];
-            const baseDelay = layerIndex * 0.15;
+            const baseDelay = layerIndex * 0.05;
             
             for (let i = 0; i < segments; i++) {
                 const angle = i * angleStep + rotationOffset;
@@ -98,7 +107,7 @@ export function initFireworks(fireworksArea) {
         }
 
         const layers = 3;
-        const baseRadius = 80;
+        const baseRadius = 20;
         const baseSegments = 12;
 
         for (let i = 0; i < layers; i++) {
