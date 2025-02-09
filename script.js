@@ -658,20 +658,25 @@ pixelArea.addEventListener('mousemove', (e) => {
                 const rect = glowArea.getBoundingClientRect();
                 const x = e.clientX - rect.left;
                 const y = e.clientY - rect.top;
+                
+                const burst = document.createElement('div');
+                burst.style.position = 'absolute';
+                burst.style.width = '60px';
+                burst.style.height = '60px';
+                burst.style.background = 'radial-gradient(circle, #4ecdc4 20%, transparent 70%)';
+                burst.style.borderRadius = '50%';
+                burst.style.filter = 'blur(5px)';
+                burst.style.left = (x - 30) + 'px';
+                burst.style.top = (y - 30) + 'px';
+                glowArea.appendChild(burst);
 
-                for (let i = 0; i < 20; i++) {
-                    const particle = createParticle(x, y, '#4ecdc4');
-                    glowArea.appendChild(particle);
-
-                    gsap.to(particle, {
-                        x: (Math.random() - 0.5) * 200,
-                        y: (Math.random() - 0.5) * 200,
-                        opacity: 0,
-                        duration: 1,
-                        ease: 'power2.out',
-                        onComplete: () => particle.remove()
-                    });
-                }
+                gsap.to(burst, {
+                    scale: 3,
+                    opacity: 0,
+                    duration: 0.8,
+                    ease: 'power2.out',
+                    onComplete: () => burst.remove()
+                });
             });
         }
 
