@@ -1,6 +1,5 @@
 import { initCursorTrail } from './animations/cursor-trail.js';
 import { initGlowingCursor } from './animations/glowing-cursor.js';
-import { initBubblePop } from './animations/bubble-pop.js';
 import { initLaserBeam } from './animations/laser-beam.js';
 import { initPixelDistortion } from './animations/pixel-distortion.js';
 import { initFireworks } from './animations/fireworks.js';
@@ -59,12 +58,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const glowingCursorArea = document.querySelector('#glowing-cursor .animation-area');
         if (glowingCursorArea) {
             initGlowingCursor(glowingCursorArea);
-        }
-
-        // Initialize bubble pop animation
-        const bubblePopArea = document.querySelector('#bubble-pop .animation-area');
-        if (bubblePopArea) {
-            initBubblePop(bubblePopArea);
         }
 
         // Initialize laser beam animation
