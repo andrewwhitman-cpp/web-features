@@ -61,10 +61,10 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         // Initialize laser beam animation
-        const laserBeamArea = document.querySelector('#laser-beam .animation-area');
-        if (laserBeamArea) {
-            initLaserBeam(laserBeamArea);
-        }
+        // const laserBeamArea = document.querySelector('#laser-beam .animation-area');
+        // if (laserBeamArea) {
+        //     initLaserBeam(laserBeamArea);
+        // }
 
         // Initialize pixel distortion animation
         const pixelDistortionArea = document.querySelector('#pixel-distortion .animation-area');
