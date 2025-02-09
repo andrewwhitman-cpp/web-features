@@ -1,20 +1,29 @@
 export function initCursorTrail(cursorTrailArea) {
     let trail = [];
+    let lastX = null;
+    let lastY = null;
+
     cursorTrailArea.addEventListener('mousemove', (e) => {
         const rect = cursorTrailArea.getBoundingClientRect();
         const x = e.clientX - rect.left;
         const y = e.clientY - rect.top;
-        const particle = createParticle(x, y, '#4ecdc4');
-        cursorTrailArea.appendChild(particle);
-        trail.push(particle);
-        gsap.to(particle, {
-            opacity: 0,
-            duration: 1,
-            onComplete: () => {
-                particle.remove();
-                trail.shift();
-            }
-        });
+
+        if (lastX !== null && lastY !== null) {
+            const line = createLine(lastX, lastY, x, y, '#4ecdc4');
+            cursorTrailArea.appendChild(line);
+            trail.push(line);
+            gsap.to(line, {
+                opacity: 0,
+                duration: 1,
+                onComplete: () => {
+                    line.remove();
+                    trail.shift();
+                }
+            });
+        }
+
+        lastX = x;
+        lastY = y;
     });
 
     cursorTrailArea.addEventListener('click', (e) => {
@@ -38,16 +47,21 @@ export function initCursorTrail(cursorTrailArea) {
         });
     });
 
-    function createParticle(x, y, color) {
-        const particle = document.createElement('div');
-        particle.style.position = 'absolute';
-        particle.style.width = '5px';
-        particle.style.height = '5px';
-        particle.style.backgroundColor = color;
-        particle.style.borderRadius = '50%';
-        particle.style.left = (x - 2.5) + 'px';
-        particle.style.top = (y - 2.5) + 'px';
-        return particle;
+    function createLine(x1, y1, x2, y2, color) {
+        const line = document.createElement('div');
+        const length = Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
+        const angle = Math.atan2(y2 - y1, x2 - x1);
+
+        line.style.position = 'absolute';
+        line.style.width = length + 'px';
+        line.style.height = '2px';
+        line.style.backgroundColor = color;
+        line.style.left = x1 + 'px';
+        line.style.top = y1 + 'px';
+        line.style.transformOrigin = '0 50%';
+        line.style.transform = `rotate(${angle}rad)`;
+
+        return line;
     }
 
     return {
