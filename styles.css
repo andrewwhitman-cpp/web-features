@@ -66,9 +66,6 @@ h1 {
 
 .animation-box {
     position: relative;
-}
-
-.animation-box {
     background: #2a2a2a;
     border-radius: 10px;
     padding: 1rem;
@@ -97,4 +94,10 @@ h1 {
     display: flex;
     align-items: center;
     justify-content: center;
+}
+
+.section-title {
+    color: #4ecdc4;
+    margin: 2rem 0 1rem;
+    font-size: 1.8rem;
 }
