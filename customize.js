@@ -3,9 +3,14 @@ import { initCursorTrailHover } from './animations/hover/cursor-trail.js';
 import { initGlowingCursorHover } from './animations/hover/glowing-cursor.js';
 import { initMoonOrbitHover } from './animations/hover/moon-orbit.js';
 import { initParticleNetworkHover } from './animations/hover/particle-network.js';
+import { initPixelDistortionHover } from './animations/hover/pixel-distortion.js';
+import { initLaserBeamHover } from './animations/hover/laser-beam.js';
+
 import { initFireworksClick } from './animations/click/fireworks.js';
 import { initPixelDistortionClick } from './animations/click/pixel-distortion.js';
 import { initLaserBeamClick } from './animations/click/laser-beam.js';
+import { initCursorTrailClick } from './animations/click/cursor-trail.js';
+import { initGlowingCursorClick } from './animations/click/glowing-cursor.js';
 
 const previewArea = document.querySelector('.preview-area');
 let currentHoverAnimation = null;
@@ -25,13 +30,17 @@ const hoverAnimations = {
     'fireworks': initFireworksHover,
     'glowing-cursor': initGlowingCursorHover,
     'moon-orbit': initMoonOrbitHover,
-    'particle-network': initParticleNetworkHover
+    'particle-network': initParticleNetworkHover,
+    'pixel-distortion': initPixelDistortionHover,
+    'laser-beam': initLaserBeamHover
 };
 
 const clickAnimations = {
     'fireworks': initFireworksClick,
     'pixel-distortion': initPixelDistortionClick,
-    'laser-beam': initLaserBeamClick
+    'laser-beam': initLaserBeamClick,
+    'cursor-trail': initCursorTrailClick,
+    'glowing-cursor': initGlowingCursorClick
 };
 
 // Update hover animation
