@@ -1,4 +1,4 @@
-export function initParticleNetwork(particleArea) {
+export function initParticleNetworkHover(particleArea) {
     const canvas = document.createElement('canvas');
     canvas.style.position = 'absolute';
     canvas.style.top = '0';

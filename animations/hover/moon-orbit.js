@@ -1,4 +1,4 @@
-export function initMoonOrbit(moonArea) {
+export function initMoonOrbitHover(moonArea) {
     const moon = document.createElement('div');
     moon.style.position = 'absolute';
     moon.style.width = '20px';

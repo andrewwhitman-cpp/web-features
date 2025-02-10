@@ -1,4 +1,4 @@
-export function initCursorTrail(cursorTrailArea) {
+export function initCursorTrailHover(cursorTrailArea) {
     let trail = [];
     let lastX = null;
     let lastY = null;
@@ -24,27 +24,6 @@ export function initCursorTrail(cursorTrailArea) {
 
         lastX = x;
         lastY = y;
-    });
-
-    cursorTrailArea.addEventListener('click', (e) => {
-        const rect = cursorTrailArea.getBoundingClientRect();
-        const ripple = document.createElement('div');
-        ripple.style.position = 'absolute';
-        ripple.style.border = '2px solid #4ecdc4';
-        ripple.style.borderRadius = '50%';
-        ripple.style.width = '10px';
-        ripple.style.height = '10px';
-        ripple.style.left = (e.clientX - rect.left - 5) + 'px';
-        ripple.style.top = (e.clientY - rect.top - 5) + 'px';
-        cursorTrailArea.appendChild(ripple);
-
-        gsap.to(ripple, {
-            scale: 15,
-            opacity: 0,
-            duration: 1,
-            ease: 'power2.out',
-            onComplete: () => ripple.remove()
-        });
     });
 
     function createLine(x1, y1, x2, y2, color) {
