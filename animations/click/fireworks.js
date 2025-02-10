@@ -1,5 +1,5 @@
 export function initFireworksClick(fireworksArea) {
-    fireworksArea.addEventListener('click', (e) => {
+    const handleClick = (e) => {
         const rect = fireworksArea.getBoundingClientRect();
         const x = e.clientX - rect.left;
         const y = e.clientY - rect.top;
@@ -63,7 +63,9 @@ export function initFireworksClick(fireworksArea) {
             const rotationOffset = (i % 2) * (Math.PI / segments);
             createMandalaLayer(radius, segments, rotationOffset, i, layers);
         }
-    });
+    };
+
+    fireworksArea.addEventListener('click', handleClick);
 
     return {
         css: `.animation-area {
@@ -73,6 +75,15 @@ export function initFireworksClick(fireworksArea) {
     border-radius: 8px;
     position: relative;
     overflow: hidden;
-}`
+}`,
+        cleanup: () => {
+            fireworksArea.removeEventListener('click', handleClick);
+            const elements = fireworksArea.querySelectorAll('div:not(.preview-area)');
+            elements.forEach(element => {
+                if (element !== fireworksArea) {
+                    element.remove();
+                }
+            });
+        }
     };
 }

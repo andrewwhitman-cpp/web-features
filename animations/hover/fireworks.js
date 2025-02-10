@@ -10,7 +10,7 @@ export function initFireworksHover(fireworksArea) {
         'hsl(120, 100%, 70%)'  // green
     ];
 
-    fireworksArea.addEventListener('mousemove', (e) => {
+    const handleMouseMove = (e) => {
         const rect = fireworksArea.getBoundingClientRect();
         const x = e.clientX - rect.left;
         const y = e.clientY - rect.top;
@@ -45,12 +45,15 @@ export function initFireworksHover(fireworksArea) {
 
         lastX = x;
         lastY = y;
-    });
+    };
 
-    fireworksArea.addEventListener('mouseleave', () => {
+    const handleMouseLeave = () => {
         lastX = 0;
         lastY = 0;
-    });
+    };
+
+    fireworksArea.addEventListener('mousemove', handleMouseMove);
+    fireworksArea.addEventListener('mouseleave', handleMouseLeave);
 
     return {
         css: `.animation-area {
@@ -60,6 +63,16 @@ export function initFireworksHover(fireworksArea) {
     border-radius: 8px;
     position: relative;
     overflow: hidden;
-}`
+}`,
+        cleanup: () => {
+            fireworksArea.removeEventListener('mousemove', handleMouseMove);
+            fireworksArea.removeEventListener('mouseleave', handleMouseLeave);
+            const elements = fireworksArea.querySelectorAll('div:not(.preview-area)');
+            elements.forEach(element => {
+                if (element !== fireworksArea) {
+                    element.remove();
+                }
+            });
+        }
     };
 }

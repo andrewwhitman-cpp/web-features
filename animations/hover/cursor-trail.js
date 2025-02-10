@@ -3,7 +3,7 @@ export function initCursorTrailHover(cursorTrailArea) {
     let lastX = null;
     let lastY = null;
 
-    cursorTrailArea.addEventListener('mousemove', (e) => {
+    const handleMouseMove = (e) => {
         const rect = cursorTrailArea.getBoundingClientRect();
         const x = e.clientX - rect.left;
         const y = e.clientY - rect.top;
@@ -24,7 +24,7 @@ export function initCursorTrailHover(cursorTrailArea) {
 
         lastX = x;
         lastY = y;
-    });
+    };
 
     function createLine(x1, y1, x2, y2, color) {
         const line = document.createElement('div');
@@ -43,6 +43,8 @@ export function initCursorTrailHover(cursorTrailArea) {
         return line;
     }
 
+    cursorTrailArea.addEventListener('mousemove', handleMouseMove);
+
     return {
         css: `.animation-area {
     width: 100%;
@@ -51,6 +53,13 @@ export function initCursorTrailHover(cursorTrailArea) {
     border-radius: 8px;
     position: relative;
     overflow: hidden;
-}`
+}`,
+        cleanup: () => {
+            cursorTrailArea.removeEventListener('mousemove', handleMouseMove);
+            trail.forEach(line => line.remove());
+            trail = [];
+            lastX = null;
+            lastY = null;
+        }
     };
 }

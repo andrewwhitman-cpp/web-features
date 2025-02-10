@@ -1,5 +1,7 @@
 export function initLaserBeamClick(laserArea) {
-    laserArea.addEventListener('click', (e) => {
+    const lasers = [];
+    
+    const handleClick = (e) => {
         const rect = laserArea.getBoundingClientRect();
         const x = e.clientX - rect.left;
         const y = e.clientY - rect.top;
@@ -19,16 +21,25 @@ export function initLaserBeamClick(laserArea) {
             const angle = (i / 12) * Math.PI * 2;
             laser.style.transform = 'rotate(' + angle + 'rad)';
             laserArea.appendChild(laser);
+            lasers.push(laser);
             
             gsap.to(laser, {
                 scale: 2,
                 opacity: 0,
                 duration: 0.8,
                 ease: 'power2.out',
-                onComplete: () => laser.remove()
+                onComplete: () => {
+                    laser.remove();
+                    const index = lasers.indexOf(laser);
+                    if (index > -1) {
+                        lasers.splice(index, 1);
+                    }
+                }
             });
         }
-    });
+    };
+
+    laserArea.addEventListener('click', handleClick);
 
     return {
         css: `.animation-area {
@@ -38,6 +49,11 @@ export function initLaserBeamClick(laserArea) {
     border-radius: 8px;
     position: relative;
     overflow: hidden;
-}`
+}`,
+        cleanup: () => {
+            laserArea.removeEventListener('click', handleClick);
+            lasers.forEach(laser => laser.remove());
+            lasers.length = 0;
+        }
     };
 }

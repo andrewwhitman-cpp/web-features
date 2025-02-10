@@ -17,7 +17,7 @@ export function initPixelDistortionClick(pixelArea) {
         }
     }
 
-    pixelArea.addEventListener('click', (e) => {
+    const handleClick = (e) => {
         const rect = pixelArea.getBoundingClientRect();
         const mouseX = e.clientX - rect.left;
         const mouseY = e.clientY - rect.top;
@@ -58,7 +58,9 @@ export function initPixelDistortionClick(pixelArea) {
                 }
             });
         });
-    });
+    };
+
+    pixelArea.addEventListener('click', handleClick);
 
     return {
         css: `.animation-area {
@@ -68,6 +70,11 @@ export function initPixelDistortionClick(pixelArea) {
     border-radius: 8px;
     position: relative;
     overflow: hidden;
-}`
+}`,
+        cleanup: () => {
+            pixelArea.removeEventListener('click', handleClick);
+            pixels.forEach(pixel => pixel.remove());
+            pixels.length = 0;
+        }
     };
 }

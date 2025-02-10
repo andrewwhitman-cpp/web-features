@@ -12,12 +12,13 @@ export function initMoonOrbitHover(moonArea) {
     let orbitRadius = 50;
     let moonMouseX = moonArea.offsetWidth / 2;
     let moonMouseY = moonArea.offsetHeight / 2;
+    let animationFrameId = null;
 
-    moonArea.addEventListener('mousemove', (e) => {
+    const handleMouseMove = (e) => {
         const rect = moonArea.getBoundingClientRect();
         moonMouseX = e.clientX - rect.left;
         moonMouseY = e.clientY - rect.top;
-    });
+    };
 
     function animateMoon() {
         angle += 0.05;
@@ -27,9 +28,10 @@ export function initMoonOrbitHover(moonArea) {
         moon.style.left = (x - 10) + 'px';
         moon.style.top = (y - 10) + 'px';
         
-        requestAnimationFrame(animateMoon);
+        animationFrameId = requestAnimationFrame(animateMoon);
     }
 
+    moonArea.addEventListener('mousemove', handleMouseMove);
     animateMoon();
 
     return {
@@ -40,6 +42,13 @@ export function initMoonOrbitHover(moonArea) {
     border-radius: 8px;
     position: relative;
     overflow: hidden;
-}`
+}`,
+        cleanup: () => {
+            moonArea.removeEventListener('mousemove', handleMouseMove);
+            if (animationFrameId) {
+                cancelAnimationFrame(animationFrameId);
+            }
+            moon.remove();
+        }
     };
 }
